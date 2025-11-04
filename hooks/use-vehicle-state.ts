@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import type { VehicleState } from "@/types/vehicle"
 
 const initialState: VehicleState = {
@@ -32,5 +32,32 @@ export function useVehicleState() {
     return () => clearInterval(interval)
   }, [])
 
-  return state
+  const setReverse = useCallback((value: boolean) => {
+    setState((prev) => ({ ...prev, reverseOn: value }))
+  }, [])
+
+  const setTurnSignalLeft = useCallback((value: boolean) => {
+    setState((prev) => ({ ...prev, turnSignalLeft: value, turnSignalRight: false }))
+  }, [])
+
+  const setTurnSignalRight = useCallback((value: boolean) => {
+    setState((prev) => ({ ...prev, turnSignalRight: value, turnSignalLeft: false }))
+  }, [])
+
+  const setAlarmTrip = useCallback((value: boolean) => {
+    setState((prev) => ({
+      ...prev,
+      alarmTrip: value,
+      recording: value, // Enable recording on alarm
+      sentryMode: value,
+    }))
+  }, [])
+
+  return {
+    ...state,
+    setReverse,
+    setTurnSignalLeft,
+    setTurnSignalRight,
+    setAlarmTrip,
+  }
 }

@@ -4,74 +4,76 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: #00d9ff;
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
+  /* Monochromatic CarPlay color scheme - light mode */
+  --background: #ffffff;
+  --foreground: #000000;
+  --card: #f5f5f5;
+  --card-foreground: #000000;
+  --popover: #ffffff;
+  --popover-foreground: #000000;
+  --primary: #000000;
+  --primary-foreground: #ffffff;
+  --secondary: #e0e0e0;
+  --secondary-foreground: #000000;
+  --muted: #e0e0e0;
+  --muted-foreground: #666666;
+  --accent: #000000;
+  --accent-foreground: #ffffff;
+  --destructive: #d93026;
+  --destructive-foreground: #ffffff;
+  --border: #e0e0e0;
+  --input: #e0e0e0;
+  --ring: #000000;
+  --chart-1: #000000;
+  --chart-2: #333333;
+  --chart-3: #666666;
+  --chart-4: #999999;
+  --chart-5: #cccccc;
   --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --sidebar: #ffffff;
+  --sidebar-foreground: #000000;
+  --sidebar-primary: #000000;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #e0e0e0;
+  --sidebar-accent-foreground: #000000;
+  --sidebar-border: #e0e0e0;
+  --sidebar-ring: #000000;
 }
 
 .dark {
-  --background: #0a0e27;
+  /* Monochromatic CarPlay color scheme - dark mode */
+  --background: #1c1c1c;
   --foreground: #ffffff;
-  --card: #1a1f3a;
+  --card: #2d2d2d;
   --card-foreground: #ffffff;
-  --popover: #1a1f3a;
+  --popover: #2d2d2d;
   --popover-foreground: #ffffff;
   --primary: #ffffff;
-  --primary-foreground: #0a0e27;
-  --secondary: #2a3050;
+  --primary-foreground: #000000;
+  --secondary: #4a4a4a;
   --secondary-foreground: #ffffff;
-  --muted: #2a3050;
-  --muted-foreground: #8b92b8;
-  --accent: #00d9ff;
-  --accent-foreground: #0a0e27;
-  --destructive: oklch(0.396 0.141 25.723);
-  --destructive-foreground: oklch(0.637 0.237 25.331);
-  --border: #2a3050;
-  --input: #2a3050;
-  --ring: oklch(0.439 0 0);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(0.269 0 0);
-  --sidebar-ring: oklch(0.439 0 0);
+  --muted: #4a4a4a;
+  --muted-foreground: #999999;
+  --accent: #ffffff;
+  --accent-foreground: #000000;
+  --destructive: #ff453a;
+  --destructive-foreground: #ffffff;
+  --border: #4a4a4a;
+  --input: #4a4a4a;
+  --ring: #ffffff;
+  --chart-1: #ffffff;
+  --chart-2: #e0e0e0;
+  --chart-3: #999999;
+  --chart-4: #666666;
+  --chart-5: #333333;
+  --sidebar: #1c1c1c;
+  --sidebar-foreground: #ffffff;
+  --sidebar-primary: #ffffff;
+  --sidebar-primary-foreground: #000000;
+  --sidebar-accent: #4a4a4a;
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: #4a4a4a;
+  --sidebar-ring: #ffffff;
 }
 
 @theme inline {
@@ -213,6 +215,45 @@ body {
 
 .animate-float {
   animation: float 3s ease-in-out infinite;
+}
+
+/* Boot animation - NAVI splash screen */
+@keyframes bootText {
+  0% {
+    font-size: 6rem;
+    opacity: 1;
+    transform: translateY(0);
+  }
+  70% {
+    font-size: 6rem;
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    font-size: 1.5rem;
+    opacity: 1;
+    transform: translateY(calc(100vh - 150px));
+  }
+}
+
+@keyframes bootSubtitle {
+  0% {
+    opacity: 0;
+  }
+  60% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.animate-boot-text {
+  animation: bootText 4s ease-in-out forwards;
+}
+
+.animate-boot-subtitle {
+  animation: bootSubtitle 4s ease-in-out forwards;
 }
 
 /* Tesla-style transitions */

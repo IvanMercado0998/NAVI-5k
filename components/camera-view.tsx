@@ -13,7 +13,6 @@ export default function CameraView({ vehicleState }: CameraViewProps) {
   const [layout, setLayout] = useState<CameraLayout>("full")
   const [selectedCamera, setSelectedCamera] = useState<"front" | "rear" | "left" | "right">("front")
 
-  // Determine layout based on vehicle state
   React.useEffect(() => {
     if (vehicleState.alarmTrip) {
       setLayout("quad")
@@ -35,7 +34,7 @@ export default function CameraView({ vehicleState }: CameraViewProps) {
   const CameraFeed = ({ label, camera }: { label: string; camera: "front" | "rear" | "left" | "right" }) => (
     <div className="relative w-full h-full bg-black/50 border border-border overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-b from-black/20 to-transparent flex items-center justify-center">
-        <div className="text-center text-text-muted">
+        <div className="text-center text-muted-foreground">
           <div className="text-sm font-bold text-accent mb-2">CAM</div>
           <div className="text-xs">{label} Camera Stream</div>
         </div>
@@ -48,9 +47,9 @@ export default function CameraView({ vehicleState }: CameraViewProps) {
 
       {/* Recording indicator */}
       {vehicleState.recording && (
-        <div className="absolute top-3 right-3 flex items-center gap-1 px-2 py-1 bg-danger/20 rounded">
-          <div className="w-1.5 h-1.5 bg-danger rounded-full animate-pulse" />
-          <span className="text-xs text-danger font-bold">REC</span>
+        <div className="absolute top-3 right-3 flex items-center gap-1 px-2 py-1 bg-destructive/20 rounded">
+          <div className="w-1.5 h-1.5 bg-destructive rounded-full animate-pulse" />
+          <span className="text-xs text-destructive font-bold">REC</span>
         </div>
       )}
     </div>
@@ -109,8 +108,8 @@ export default function CameraView({ vehicleState }: CameraViewProps) {
             }}
             className={`px-4 py-2 rounded font-bold text-xs transition-all ${
               selectedCamera === cam
-                ? "bg-accent text-background border border-accent"
-                : "bg-card text-accent border border-border hover:bg-card-hover"
+                ? "bg-foreground text-background border border-foreground"
+                : "bg-card text-foreground border border-border hover:bg-secondary"
             }`}
           >
             {cam.toUpperCase()}
