@@ -217,7 +217,46 @@ body {
   animation: float 3s ease-in-out infinite;
 }
 
-/* Boot animation - NAVI splash screen */
+/* Quick Boot animation - NAVI splash screen (reduced from 4s to 1.5s) */
+@keyframes bootTextQuick {
+  0% {
+    font-size: 6rem;
+    opacity: 1;
+    transform: translateY(0);
+  }
+  50% {
+    font-size: 6rem;
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    font-size: 1.5rem;
+    opacity: 1;
+    transform: translateY(calc(100vh - 150px));
+  }
+}
+
+@keyframes bootSubtitleQuick {
+  0% {
+    opacity: 0;
+  }
+  40% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.animate-boot-text-quick {
+  animation: bootTextQuick 1.5s ease-in-out forwards;
+}
+
+.animate-boot-subtitle-quick {
+  animation: bootSubtitleQuick 1.5s ease-in-out forwards;
+}
+
+/* Old boot animations - kept for reference */
 @keyframes bootText {
   0% {
     font-size: 6rem;

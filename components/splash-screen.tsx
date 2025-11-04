@@ -10,13 +10,11 @@ export default function SplashScreen({ onComplete }: SplashScreenProps) {
   const [showSubtitle, setShowSubtitle] = useState(false)
 
   useEffect(() => {
-    // Show subtitle after 1.5 seconds
-    const subtitleTimer = setTimeout(() => setShowSubtitle(true), 1500)
+    const subtitleTimer = setTimeout(() => setShowSubtitle(true), 500)
 
-    // Complete animation after 4 seconds
     const completeTimer = setTimeout(() => {
       onComplete()
-    }, 4000)
+    }, 1500)
 
     return () => {
       clearTimeout(subtitleTimer)
@@ -28,11 +26,11 @@ export default function SplashScreen({ onComplete }: SplashScreenProps) {
     <div className="fixed inset-0 bg-background flex items-center justify-center overflow-hidden z-50">
       {/* Main NAVI text with boot animation */}
       <div className="relative flex flex-col items-center">
-        <h1 className="font-bold text-black dark:text-white animate-boot-text leading-none">NAVI</h1>
+        <h1 className="font-bold text-black dark:text-white animate-boot-text-quick leading-none">NAVI</h1>
 
         {/* Subtitle with fade-in animation */}
         {showSubtitle && (
-          <div className="animate-boot-subtitle absolute top-full mt-4 text-gray-600 dark:text-gray-400 text-sm font-medium whitespace-nowrap">
+          <div className="animate-boot-subtitle-quick absolute top-full mt-4 text-gray-600 dark:text-gray-400 text-sm font-medium whitespace-nowrap">
             NaviCo by Ivan Mercado
           </div>
         )}
