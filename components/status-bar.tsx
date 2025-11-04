@@ -2,15 +2,17 @@
 
 import { useState } from "react"
 import { useTheme } from "next-themes"
+import { motion } from "framer-motion"
 import type { VehicleState } from "@/types/vehicle"
 import { Sun, Moon } from "lucide-react"
 
 interface StatusBarProps {
   vehicleState: VehicleState
   onAppLaunch: (app: string) => void
+  onBackToMenu?: () => void
 }
 
-export default function StatusBar({ vehicleState, onAppLaunch }: StatusBarProps) {
+export default function StatusBar({ vehicleState, onAppLaunch, onBackToMenu }: StatusBarProps) {
   const [mounted, setMounted] = useState(false)
   const { theme, setTheme } = useTheme()
 
@@ -22,6 +24,8 @@ export default function StatusBar({ vehicleState, onAppLaunch }: StatusBarProps)
 
   const apps = [
     { id: "youtube", label: "▶", name: "YouTube", color: "red" },
+    { id: "youtube-music", label: "♫", name: "YT Music", color: "red" },
+    { id: "spotify", label: "🎵", name: "Spotify", color: "green" },
     { id: "chrome", label: "◉", name: "Chrome", color: "yellow" },
     { id: "maps", label: "🗺", name: "Maps", color: "green" },
     { id: "camera", label: "📷", name: "Camera", color: "blue" },
@@ -29,6 +33,18 @@ export default function StatusBar({ vehicleState, onAppLaunch }: StatusBarProps)
 
   return (
     <div className="h-20 bg-card border-b border-border flex items-center justify-between px-6 gap-8 transition-smooth">
+      {onBackToMenu && (
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={onBackToMenu}
+          className="p-2 rounded-lg border border-border hover:border-accent/50 hover:bg-accent/10 transition-smooth text-lg"
+          title="Back to Main Menu"
+        >
+          ←
+        </motion.button>
+      )}
+
       {/* Time & System Status */}
       <div className="flex items-center gap-2">
         <div className="text-sm text-muted-foreground font-medium">
@@ -82,17 +98,18 @@ export default function StatusBar({ vehicleState, onAppLaunch }: StatusBarProps)
         )}
       </div>
 
-      {/* App Launcher Buttons */}
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-1 flex-wrap justify-end">
         {apps.map((app) => (
-          <button
+          <motion.button
             key={app.id}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
             onClick={() => onAppLaunch(app.id)}
-            className="p-2 rounded-lg border border-border hover:border-accent hover:bg-accent/10 transition-smooth-fast text-lg hover:scale-110 transform"
+            className="p-2 rounded-lg border border-border hover:border-accent hover:bg-accent/10 transition-smooth-fast text-lg hover:shadow-lg"
             title={app.name}
           >
             {app.label}
-          </button>
+          </motion.button>
         ))}
       </div>
 
@@ -130,13 +147,15 @@ export default function StatusBar({ vehicleState, onAppLaunch }: StatusBarProps)
         </div>
 
         {/* Theme Toggle */}
-        <button
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
           onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
           className="p-2 rounded-lg border border-border hover:border-accent hover:bg-accent/10 transition-smooth-fast ml-2"
           title={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
         >
           {theme === "dark" ? <Sun className="w-5 h-5 text-accent" /> : <Moon className="w-5 h-5 text-accent" />}
-        </button>
+        </motion.button>
       </div>
     </div>
   )

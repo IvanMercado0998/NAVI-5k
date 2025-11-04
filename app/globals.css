@@ -256,6 +256,45 @@ body {
   animation: bootSubtitleQuick 1.5s ease-in-out forwards;
 }
 
+/* Updated boot animation to exactly 2 seconds */
+@keyframes bootText2sec {
+  0% {
+    font-size: 6rem;
+    opacity: 1;
+    transform: translateY(0);
+  }
+  50% {
+    font-size: 6rem;
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    font-size: 1.5rem;
+    opacity: 1;
+    transform: translateY(calc(100vh - 150px));
+  }
+}
+
+@keyframes bootSubtitle2sec {
+  0% {
+    opacity: 0;
+  }
+  35% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.animate-boot-text-2sec {
+  animation: bootText2sec 2s ease-in-out forwards;
+}
+
+.animate-boot-subtitle-2sec {
+  animation: bootSubtitle2sec 2s ease-in-out forwards;
+}
+
 /* Old boot animations - kept for reference */
 @keyframes bootText {
   0% {

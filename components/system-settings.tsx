@@ -2,12 +2,14 @@
 
 import { useState } from "react"
 import { motion } from "framer-motion"
+import { ArrowLeft } from "lucide-react"
 
 interface SystemSettingsProps {
   onAppLaunch?: (app: string) => void
+  onBackToMenu?: () => void
 }
 
-export default function SystemSettings({ onAppLaunch }: SystemSettingsProps) {
+export default function SystemSettings({ onAppLaunch, onBackToMenu }: SystemSettingsProps) {
   const [recordingEnabled, setRecordingEnabled] = useState(true)
   const [sentryMode, setSentryMode] = useState(false)
   const [debugMode, setDebugMode] = useState(false)
@@ -55,7 +57,30 @@ export default function SystemSettings({ onAppLaunch }: SystemSettingsProps) {
   return (
     <div className="w-full h-full bg-gradient-to-b from-background to-secondary/5 p-6 overflow-auto">
       <div className="max-w-2xl mx-auto space-y-4 animate-fade-in">
-        <h2 className="text-2xl font-bold text-foreground mb-6">SYSTEM SETTINGS</h2>
+        <div className="flex items-center gap-4 mb-6">
+          {onBackToMenu && (
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={onBackToMenu}
+              className="p-2 bg-card border border-border rounded-lg hover:border-accent/50 transition-smooth"
+            >
+              <ArrowLeft className="w-5 h-5 text-foreground" />
+            </motion.button>
+          )}
+          <h2 className="text-2xl font-bold text-foreground">SYSTEM SETTINGS</h2>
+        </div>
+
+        {onAppLaunch && (
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            onClick={() => onAppLaunch("account")}
+            className="w-full p-4 bg-accent/20 border-2 border-accent rounded-lg text-accent font-bold hover:bg-accent/30 transition-smooth"
+          >
+            👤 ACCOUNT SETTINGS
+          </motion.button>
+        )}
 
         <div className="space-y-4">
           <SettingItem
