@@ -1,0 +1,6 @@
+node_modules
+dist
+.next
+*.md
+package.json
+tsconfig.json
