@@ -139,6 +139,14 @@ body {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
+
+.glass-tesla {
+  backdrop-filter: blur(20px) saturate(180%);
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+
 /* Smooth scrollbar */
 ::-webkit-scrollbar {
   width: 8px;

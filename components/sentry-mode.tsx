@@ -1,4 +1,6 @@
 "use client"
+ 
+// Tesla like Sentry Mode UI
 
 import { AlertTriangle } from "lucide-react"
 import CameraView from "@/components/camera-view"

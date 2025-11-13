@@ -1,3 +1,4 @@
+// app/page.tsx - virtual keyboard fix - dont change logic 
 "use client"
 
 import { useState } from "react"
@@ -10,8 +11,9 @@ import ControlPanel from "@/components/control-panel"
 import SystemSettings from "@/components/system-settings"
 import SentryMode from "@/components/sentry-mode"
 import UserAccountSettings from "@/components/user-account-settings"
-import AppViewer from "@/components/app-viewer"
+import AppViewer from "@/components/app-viewer/AppViewer"
 import { useVehicleState } from "@/hooks/use-vehicle-state"
+import KeyboardWrapper from "@/components/keyboard-wrapper" // Add this import
 
 export default function Home() {
   const [bootComplete, setBootComplete] = useState(false)
@@ -19,9 +21,12 @@ export default function Home() {
   const [activeTab, setActiveTab] = useState("home")
   const [activeApp, setActiveApp] = useState<string | null>(null)
   const [splitScreenMode, setSplitScreenMode] = useState(false)
+  const [accountSettingsOpen, setAccountSettingsOpen] = useState(false)
   const vehicleState = useVehicleState()
 
   const handleAppSelect = (app: string) => {
+    console.log("App selected:", app)
+    
     if (app === "controls") {
       setShowAppMenu(false)
       setActiveTab("controls")
@@ -32,7 +37,13 @@ export default function Home() {
       setActiveTab("settings")
       setActiveApp(null)
       setSplitScreenMode(false)
-    } else if (["maps", "youtube", "youtube-music", "spotify", "chrome"].includes(app)) {
+      setAccountSettingsOpen(false)
+    } else if (app === "account") {
+      setAccountSettingsOpen(true)
+      setShowAppMenu(false)
+      setActiveApp(null)
+      setSplitScreenMode(false)
+    } else if (["maps", "youtube", "youtube-music", "spotify", "brave"].includes(app)) {
       setShowAppMenu(false)
       setActiveApp(app)
       setSplitScreenMode(true)
@@ -49,74 +60,123 @@ export default function Home() {
     setActiveApp(null)
     setSplitScreenMode(false)
     setActiveTab("home")
+    setAccountSettingsOpen(false)
+  }
+
+  // Handle app launch from Navigation component
+  const handleAppLaunch = (appId: string) => {
+    console.log("App launched from navigation:", appId)
+    handleAppSelect(appId)
   }
 
   if (!bootComplete) {
     return <SplashScreen onComplete={() => setBootComplete(true)} />
   }
 
+  // Account Settings screen
+  if (accountSettingsOpen) {
+    return (
+      <KeyboardWrapper> {/* Wrap Account Settings */}
+        <main className="w-full h-screen bg-background overflow-hidden">
+          <StatusBar
+            vehicleState={vehicleState}
+            onBackToMenu={handleBackToMenu}
+          />
+          <UserAccountSettings onBack={handleBackToMenu} />
+        </main>
+      </KeyboardWrapper>
+    )
+  }
+
   if (showAppMenu && !activeApp && activeTab === "home") {
-    return <AppMenu onAppSelect={handleAppSelect} />
+    return (
+      <KeyboardWrapper> {/* Wrap App Menu */}
+        <AppMenu onAppSelect={handleAppSelect} />
+      </KeyboardWrapper>
+    )
   }
 
   if (vehicleState.sentryMode) {
-    return <SentryMode vehicleState={vehicleState} onDisable={() => vehicleState.setAlarmTrip(false)} />
+    return (
+      <KeyboardWrapper> {/* Wrap Sentry Mode */}
+        <SentryMode
+          vehicleState={vehicleState}
+          onDisable={() => vehicleState.setAlarmTrip(false)}
+        />
+      </KeyboardWrapper>
+    )
   }
 
   // Split-screen mode for apps
   if (splitScreenMode && activeApp) {
     return (
-      <main className="w-full h-screen bg-background overflow-hidden flex">
-        {/* Left side - Dashboard */}
-        <div className="flex-1 flex flex-col border-r border-border">
-          <StatusBar vehicleState={vehicleState} onAppLaunch={handleAppSelect} onBackToMenu={handleBackToMenu} />
-          <DashboardLayout activeTab={activeTab} setActiveTab={setActiveTab} onAppLaunch={handleAppSelect}>
-            {activeTab === "home" && <CameraView vehicleState={vehicleState} />}
-            {activeTab === "controls" && <ControlPanel vehicleState={vehicleState} />}
-            {activeTab === "settings" && (
-              <SystemSettings onAppLaunch={handleAppSelect} onBackToMenu={handleBackToMenu} />
-            )}
-          </DashboardLayout>
-        </div>
+      <KeyboardWrapper> {/* Wrap Split Screen */}
+        <main className="w-full h-screen bg-background overflow-hidden flex">
+          {/* Left side - Dashboard */}
+          <div className="flex-1 flex flex-col border-r border-border">
+            <StatusBar
+              vehicleState={vehicleState}
+              onBackToMenu={handleBackToMenu}
+            />
+            <DashboardLayout
+              activeTab={activeTab}
+              setActiveTab={setActiveTab}
+              activeApp={activeApp}
+              setActiveApp={setActiveApp}
+              onAppLaunch={handleAppLaunch}
+            >
+              {activeTab === "home" && <CameraView vehicleState={vehicleState} />}
+              {activeTab === "controls" && <ControlPanel vehicleState={vehicleState} />}
+              {activeTab === "settings" && (
+                <SystemSettings
+                  onAppLaunch={handleAppSelect}
+                  onBackToMenu={handleBackToMenu}
+                />
+              )}
+            </DashboardLayout>
+          </div>
 
-        {/* Right side - App */}
-        <div className="flex-1 flex flex-col bg-card">
-          <AppViewer
-            app={activeApp}
-            onClose={() => {
-              setActiveApp(null)
-              setSplitScreenMode(false)
-            }}
-            onBack={handleBackToMenu}
-          />
-        </div>
-      </main>
+          {/* Right side - App */}
+          <div className="flex-1 flex flex-col bg-card">
+            <AppViewer
+              app={activeApp as any}
+              onClose={() => {
+                setActiveApp(null)
+                setSplitScreenMode(false)
+              }}
+              onBack={handleBackToMenu}
+            />
+          </div>
+        </main>
+      </KeyboardWrapper>
     )
   }
 
-  // Account Settings
-  if (activeTab === "account") {
-    return (
-      <main className="w-full h-screen bg-background overflow-hidden">
-        <StatusBar vehicleState={vehicleState} onAppLaunch={handleAppSelect} onBackToMenu={handleBackToMenu} />
-        <UserAccountSettings
-          onBack={() => {
-            setActiveTab("settings")
-            setSplitScreenMode(false)
-          }}
-        />
-      </main>
-    )
-  }
-
+  // Default dashboard
   return (
-    <main className="w-full h-screen bg-background overflow-hidden">
-      <StatusBar vehicleState={vehicleState} onAppLaunch={handleAppSelect} onBackToMenu={handleBackToMenu} />
-      <DashboardLayout activeTab={activeTab} setActiveTab={setActiveTab} onAppLaunch={handleAppSelect}>
-        {activeTab === "home" && <CameraView vehicleState={vehicleState} />}
-        {activeTab === "controls" && <ControlPanel vehicleState={vehicleState} />}
-        {activeTab === "settings" && <SystemSettings onAppLaunch={handleAppSelect} onBackToMenu={handleBackToMenu} />}
-      </DashboardLayout>
-    </main>
+    <KeyboardWrapper> {/* Wrap Default Dashboard */}
+      <main className="w-full h-screen bg-background overflow-hidden">
+        <StatusBar
+          vehicleState={vehicleState}
+          onBackToMenu={handleBackToMenu}
+        />
+        <DashboardLayout
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+          activeApp={activeApp}
+          setActiveApp={setActiveApp}
+          onAppLaunch={handleAppLaunch}
+        >
+          {activeTab === "home" && <CameraView vehicleState={vehicleState} />}
+          {activeTab === "controls" && <ControlPanel vehicleState={vehicleState} />}
+          {activeTab === "settings" && (
+            <SystemSettings
+              onAppLaunch={handleAppSelect}
+              onBackToMenu={handleBackToMenu}
+            />
+          )}
+        </DashboardLayout>
+      </main>
+    </KeyboardWrapper>
   )
 }

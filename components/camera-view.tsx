@@ -1,6 +1,8 @@
+//components\camera-view.tsx
+// Fix: Optimize UI Tesla-like Camera View Component
 "use client"
 
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import type { VehicleState } from "@/types/vehicle"
 
 interface CameraViewProps {
@@ -8,44 +10,42 @@ interface CameraViewProps {
 }
 
 type CameraLayout = "full" | "pip" | "quad"
+type CameraPosition = "front" | "rear" | "left" | "right"
 
 export default function CameraView({ vehicleState }: CameraViewProps) {
   const [layout, setLayout] = useState<CameraLayout>("full")
-  const [selectedCamera, setSelectedCamera] = useState<"front" | "rear" | "left" | "right">("front")
+  const [selectedCamera, setSelectedCamera] = useState<CameraPosition>("front")
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (vehicleState.alarmTrip) {
       setLayout("quad")
     } else if (vehicleState.reverseOn) {
       setLayout("full")
       setSelectedCamera("rear")
     } else if (vehicleState.turnSignalLeft) {
-      setLayout("pip")
+      setLayout("full")
       setSelectedCamera("left")
     } else if (vehicleState.turnSignalRight) {
-      setLayout("pip")
+      setLayout("full")
       setSelectedCamera("right")
-    } else {
+    } else if (selectedCamera !== "left" && selectedCamera !== "right") {
+      // Only reset to front if user didn't manually select left/right
       setLayout("full")
       setSelectedCamera("front")
     }
-  }, [vehicleState])
+  }, [vehicleState, selectedCamera])
 
-  const CameraFeed = ({ label, camera }: { label: string; camera: "front" | "rear" | "left" | "right" }) => (
+  const CameraFeed = ({ label, camera }: { label: string; camera: CameraPosition }) => (
     <div className="relative w-full h-full bg-black/50 border border-border overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-b from-black/20 to-transparent flex items-center justify-center">
         <div className="text-center text-muted-foreground">
-          <div className="text-sm font-bold text-accent mb-2">CAM</div>
+          <div className="text-sm font-bold text-accent mb-1">CAM</div>
           <div className="text-xs">{label} Camera Stream</div>
         </div>
       </div>
-
-      {/* Camera label */}
       <div className="absolute top-3 left-3 px-2 py-1 bg-black/60 rounded text-xs font-bold text-accent border border-accent/50">
         {label}
       </div>
-
-      {/* Recording indicator */}
       {vehicleState.recording && (
         <div className="absolute top-3 right-3 flex items-center gap-1 px-2 py-1 bg-destructive/20 rounded">
           <div className="w-1.5 h-1.5 bg-destructive rounded-full animate-pulse" />
@@ -55,31 +55,29 @@ export default function CameraView({ vehicleState }: CameraViewProps) {
     </div>
   )
 
-  return (
-    <div className="w-full h-full bg-background p-4 flex flex-col gap-4">
-      {/* Main Camera Area */}
-      <div className="flex-1 flex gap-4">
-        {layout === "full" && (
+  const renderLayout = () => {
+    switch (layout) {
+      case "full":
+        return (
           <div className="flex-1 rounded-lg overflow-hidden border-2 border-accent/30">
             <CameraFeed label={selectedCamera.toUpperCase()} camera={selectedCamera} />
           </div>
-        )}
-
-        {layout === "pip" && (
+        )
+      case "pip":
+        return (
           <>
-            {/* Main camera */}
-            <div className="flex-1 rounded-lg overflow-hidden border-2 border-accent/30">
-              <CameraFeed label="FRONT" camera="front" />
-            </div>
-
-            {/* Picture in Picture */}
+            {selectedCamera !== "left" && selectedCamera !== "right" && (
+              <div className="flex-1 rounded-lg overflow-hidden border-2 border-accent/30">
+                <CameraFeed label="FRONT" camera="front" />
+              </div>
+            )}
             <div className="w-1/4 rounded-lg overflow-hidden border-2 border-accent">
               <CameraFeed label={selectedCamera.toUpperCase()} camera={selectedCamera} />
             </div>
           </>
-        )}
-
-        {layout === "quad" && (
+        )
+      case "quad":
+        return (
           <div className="flex-1 grid grid-cols-2 gap-4">
             <div className="rounded-lg overflow-hidden border border-accent/50">
               <CameraFeed label="FRONT" camera="front" />
@@ -94,8 +92,16 @@ export default function CameraView({ vehicleState }: CameraViewProps) {
               <CameraFeed label="RIGHT" camera="right" />
             </div>
           </div>
-        )}
-      </div>
+        )
+      default:
+        return null
+    }
+  }
+
+  return (
+    <div className="w-full h-full bg-background p-4 flex flex-col gap-4">
+      {/* Main Camera Area */}
+      <div className="flex-1 flex gap-4">{renderLayout()}</div>
 
       {/* Manual Camera Selection */}
       <div className="flex gap-2 px-4">
